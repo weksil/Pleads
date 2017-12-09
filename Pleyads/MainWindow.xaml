@@ -1,0 +1,79 @@
+﻿<Window x:Class="Pleyads.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pleyads"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" MouseUp="Window_MouseUp" MouseLeave="Window_MouseLeave">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Кластеры" Click="HideClasters"></MenuItem>
+        </Menu>
+        <TabControl Margin="-4,0,0,0" Grid.Row="1">
+            <TabItem Header="Схема">
+                <Grid MouseMove="Grid_MouseMove" Background="#eee">
+                    <Button Content="Button" Width="75" Height="25"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Margin="5" Click="Button_Click" />
+                    <TextBox x:Name="ParseFloat" Width="75" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="85,5,5,5" />
+                    <ItemsControl x:Name="ClasterPanel">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Ellipse Width="{Binding Mass}" Height="{Binding Mass}" Fill="{Binding CustomColor}" StrokeThickness="1"
+                                     Stroke="#868686" ToolTip="{Binding Tip}" Visibility="{Binding Hide}"
+                                     MouseDown="SelectItem"  MouseWheel="Ellipse_MouseWheel">
+                                    <Ellipse.RenderTransform>
+                                        <TranslateTransform X="{Binding Pos.X}" Y="{Binding Pos.Y}" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl x:Name="EdgesPanel" Height="291" VerticalAlignment="Top" HorizontalAlignment="Left" Width="515">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Line X1="{Binding APos.X}" X2="{Binding BPos.X}" Y1="{Binding APos.Y}" Y2="{Binding BPos.Y}" Stroke="{Binding CustomColor}" Visibility="{Binding Hide}" StrokeThickness="4" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl x:Name="NodesPanel">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid  Height="30" Width="42" Visibility="{Binding Hide}"  MouseWheel="Border_MouseWheel" MouseDown="SelectItem">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform X="{Binding Pos.X}" Y="{Binding Pos.Y}" />
+                                    </Grid.RenderTransform>
+                                    <Rectangle Fill="{Binding CustomColor}" ToolTip="{Binding Name}" StrokeThickness="1" Stroke="#868686" />
+                                    <TextBlock Text="{Binding ShotName}" Margin="5" TextAlignment="Center" Foreground="Black" IsHitTestVisible="False" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
