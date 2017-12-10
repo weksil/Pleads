@@ -38,8 +38,8 @@ namespace Pleyads
 
         public void RePrint()
         {
-            PropertyChanged(this, new PropertyChangedEventArgs("Pos"));
-            PropertyChanged(this, new PropertyChangedEventArgs("Hide"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Pos"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Hide"));
         }
 
         public void Clear()
@@ -112,7 +112,7 @@ namespace Pleyads
 
             N.Normalize();
 
-            var L = 20 / (w * w);
+            var L = 50 / (w);
             var f = w * (L - r) * 0.01;
 
             A.V = (A.V + f * N) * 0.9;
@@ -125,9 +125,9 @@ namespace Pleyads
 
         public void RePrint()
         {
-            PropertyChanged(this, new PropertyChangedEventArgs("BPos"));
-            PropertyChanged(this, new PropertyChangedEventArgs("APos"));
-            PropertyChanged(this, new PropertyChangedEventArgs("Hide"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BPos"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("APos"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Hide"));
         }
     }
 
@@ -244,7 +244,10 @@ namespace Pleyads
         public float EpsEdge = 0.5f;
 
         private float[][] matrix;
+        private string[] names;
         private DispatcherTimer timer;
+
+        private Table table;
 
         public delegate void UpdateHandlerDelegate();
 
@@ -284,7 +287,9 @@ namespace Pleyads
                         }
                         )
                     .ToArray())
+                    .Where(x => x.Length > 1)
                 .ToArray();
+            names = t.First().Skip(1).ToArray();
             BuldPleyads();
         }
 
@@ -449,6 +454,36 @@ namespace Pleyads
         {
             if (curSelect is null) return;
             curSelect.Move(newPos);
+        }
+
+        public Table CreateTable()
+        {
+            table = new Table(matrix, names, EpsEdge);
+            return table;
+        }
+
+        public void SelectRow(int row)
+        {
+            table.SelectRow(row);
+        }
+
+        public void SelectCollumn(int coll)
+        {
+            table.SelectCollumn(coll);
+        }
+
+        public void UnselectRow(int row)
+        {
+            table.UnselectRow(row);
+        }
+
+        public void UnselectCollumn(int coll)
+        {
+            table.UnselectCollumn(coll);
+        }
+
+        public void Print(Claster item)
+        {
         }
     }
 

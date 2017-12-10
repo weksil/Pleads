@@ -5,22 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pleyads"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" MouseUp="Window_MouseUp" MouseLeave="Window_MouseLeave">
+        Title="MainWindow" Height="700" Width="1000" MouseUp="Window_MouseUp" MouseLeave="Window_MouseLeave">
+    <Window.Resources>
+        <DataTemplate x:Key="CellTemplate">
+            <ItemsControl ItemsSource="{Binding Collums}" DisplayMemberPath="Value" />
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="Кластеры" Click="HideClasters"></MenuItem>
-        </Menu>
-        <TabControl Margin="-4,0,0,0" Grid.Row="1">
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBox x:Name="FilePath" Width="500" Height="20" HorizontalAlignment="Left"  Margin="5" ToolTip="Путь до файла" />
+            <Button Content="Загрузить" Width="75" Height="20"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Margin="5" Click="Download" />
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            <TextBox x:Name="Eps" Width="50" Height="20" HorizontalAlignment="Left"  Margin="5"  Text="0.5" ToolTip="Порог отображения" />
+            <Button Content="Обновить" Width="75" Height="20"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Margin="5" Click="UpdateEps" />
+        </StackPanel>
+        <TabControl Grid.Row="1">
             <TabItem Header="Схема">
                 <Grid MouseMove="Grid_MouseMove" Background="#eee">
-                    <Button Content="Button" Width="75" Height="25"
-                            VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                            Margin="5" Click="Button_Click" />
-                    <TextBox x:Name="ParseFloat" Width="75" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="85,5,5,5" />
                     <ItemsControl x:Name="ClasterPanel">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -71,8 +80,25 @@
                     </ItemsControl>
                 </Grid>
             </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5" />
+            <TabItem Header="Таблица">
+                <ItemsControl x:Name="dgNodeTable">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="50" Height="20" MouseDown="SelectCell">
+                                <Grid.RenderTransform>
+                                    <TranslateTransform X="{Binding Pos.X}" Y="{Binding Pos.Y}" />
+                                </Grid.RenderTransform>
+                                <Rectangle Fill="{Binding Color}" StrokeThickness="1" Stroke="#868686" />
+                                <TextBlock Text="{Binding Value}" HorizontalAlignment="Center" IsHitTestVisible="False" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </TabItem>
         </TabControl>
     </Grid>

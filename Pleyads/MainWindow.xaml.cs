@@ -26,13 +26,24 @@ namespace Pleyads
         public MainWindow()
         {
             InitializeComponent();
+            FilePath.Text = @"../../data/crosscor.txt";
             controller = new PleyadsControll();
-            controller.Download(@"../../data/crosscor.txt");
+            controller.Start();
+        }
+
+        private void InitTable()
+        {
+            var table = controller.CreateTable();
+            dgNodeTable.ItemsSource = table.Cells;
+        }
+
+        private void Download(object sender, RoutedEventArgs e)
+        {
+            controller.Download(FilePath.Text);
             NodesPanel.ItemsSource = controller.Nodes;
             EdgesPanel.ItemsSource = controller.Edges;
             ClasterPanel.ItemsSource = controller.Clasters;
-            ParseFloat.Text = controller.EpsEdge.ToString();
-            controller.Start();
+            InitTable();
         }
 
         private void SelectItem(object sender, MouseButtonEventArgs e)
@@ -41,17 +52,14 @@ namespace Pleyads
             controller.SelectItem(obj);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void UpdateEps(object sender, RoutedEventArgs e)
         {
-            controller.EpsEdge = float.Parse(ParseFloat.Text.Replace(".", ","));
+            controller.EpsEdge = float.Parse(Eps.Text.Replace(".", ","));
             controller.RebuildPleyads();
             NodesPanel.Items.Refresh();
             EdgesPanel.Items.Refresh();
             ClasterPanel.Items.Refresh();
-        }
-
-        private void HideClasters(object sender, RoutedEventArgs e)
-        {
+            InitTable();
         }
 
         private void Ellipse_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -84,6 +92,45 @@ namespace Pleyads
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             controller.UnselectItem();
+        }
+
+        private void SelectCell(object sender, MouseButtonEventArgs e)
+        {
+            var cell = (e.Source as Shape).DataContext as Cell;
+            if (cell.isSelected)
+            {
+                cell.isSelected = false;
+                if (cell.CellIndex.Y == 0)
+                {
+                    controller.UnselectCollumn(cell.CellIndex.X);
+                }
+                if (cell.CellIndex.X == 0)
+                {
+                    controller.UnselectRow(cell.CellIndex.Y);
+                }
+                if (cell.CellIndex.X != 0 && cell.CellIndex.Y != 0)
+                {
+                    controller.UnselectRow(cell.CellIndex.Y);
+                    controller.UnselectCollumn(cell.CellIndex.X);
+                }
+            }
+            else
+            {
+                cell.isSelected = true;
+                if (cell.CellIndex.X == 0)
+                {
+                    controller.SelectRow(cell.CellIndex.Y);
+                }
+                if (cell.CellIndex.Y == 0)
+                {
+                    controller.SelectCollumn(cell.CellIndex.X);
+                }
+                if (cell.CellIndex.X != 0 && cell.CellIndex.Y != 0)
+                {
+                    controller.SelectRow(cell.CellIndex.Y);
+                    controller.SelectCollumn(cell.CellIndex.X);
+                }
+            }
         }
     }
 }
