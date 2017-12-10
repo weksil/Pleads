@@ -39,11 +39,19 @@ namespace Pleyads
 
         private void Download(object sender, RoutedEventArgs e)
         {
-            controller.Download(FilePath.Text);
+            controller.EpsEdge = float.Parse(Eps.Text.Replace(".", ","));
+
+            if (!controller.Download(FilePath.Text, BadPathFile)) return;
             NodesPanel.ItemsSource = controller.Nodes;
             EdgesPanel.ItemsSource = controller.Edges;
             ClasterPanel.ItemsSource = controller.Clasters;
             InitTable();
+            UpdateView();
+        }
+
+        private void BadPathFile()
+        {
+            MessageBox.Show("Файл отсутствует");
         }
 
         private void SelectItem(object sender, MouseButtonEventArgs e)
@@ -54,12 +62,18 @@ namespace Pleyads
 
         private void UpdateEps(object sender, RoutedEventArgs e)
         {
+            if (!controller.IsInit) return;
             controller.EpsEdge = float.Parse(Eps.Text.Replace(".", ","));
             controller.RebuildPleyads();
+            InitTable();
+            UpdateView();
+        }
+
+        private void UpdateView()
+        {
             NodesPanel.Items.Refresh();
             EdgesPanel.Items.Refresh();
             ClasterPanel.Items.Refresh();
-            InitTable();
         }
 
         private void Ellipse_MouseWheel(object sender, MouseWheelEventArgs e)

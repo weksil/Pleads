@@ -20,7 +20,7 @@ namespace Pleyads
 
         public Table(float[][] values, string[] headers, float maxValue)
         {
-            if (values.GetLength(0) != headers.Length) throw new Exception();
+            if (values.GetLength(0) != headers.Length) return;
             Cell t;
             Cells.Add(new Cell(0, 0));
             string h;
@@ -44,16 +44,16 @@ namespace Pleyads
                 {
                     t = new Cell(j + 1, i + 1);
 
-                    if (Math.Abs(values[i][j]) > maxValue)
+                    if (Math.Abs(values[i][j]) < maxValue)
+                    {
+                        t.Value = "";
+                        t.Number = 0;
+                    }
+                    else
                     {
                         t.Value = values[i][j].ToString();
                         t.Number = values[i][j];
                         t.Color = DefaultColor;
-                    }
-                    else
-                    {
-                        t.Value = "";
-                        t.Number = 0;
                     }
 
                     Cells.Add(t);

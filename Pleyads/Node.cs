@@ -248,6 +248,8 @@ namespace Pleyads
         private DispatcherTimer timer;
 
         private Table table;
+        private bool isInit = false;
+        public bool IsInit { get { return isInit; } }
 
         public delegate void UpdateHandlerDelegate();
 
@@ -258,14 +260,22 @@ namespace Pleyads
         private const float CentrXShift = 250;
         private const float CentrYShift = 250;
 
-        public void Download(string path, char delimiter = '\t')
+        public bool Download(string path, Action badPath, char delimiter = '\t')
         {
             string[][] t;
-
+            clasters.Clear();
+            nodes.Clear();
+            edges.Clear();
+            if (!File.Exists(path))
+            {
+                badPath();
+                return isInit;
+            }
             using (StreamReader sr = File.OpenText(path))
             {
                 t = sr.ReadToEnd().Replace('.', ',').Split('\n').Select(x => x.Split(delimiter)).ToArray();
             }
+            isInit = true;
 
             int id = 0;
             Random r = new Random();
@@ -291,6 +301,7 @@ namespace Pleyads
                 .ToArray();
             names = t.First().Skip(1).ToArray();
             BuldPleyads();
+            return isInit;
         }
 
         private void Clear()
