@@ -6,11 +6,7 @@
         xmlns:local="clr-namespace:Pleyads"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1000" MouseUp="Window_MouseUp" MouseLeave="Window_MouseLeave">
-    <Window.Resources>
-        <DataTemplate x:Key="CellTemplate">
-            <ItemsControl ItemsSource="{Binding Collums}" DisplayMemberPath="Value" />
-        </DataTemplate>
-    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

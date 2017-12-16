@@ -24,7 +24,7 @@ namespace Pleyads
             Cell t;
             Cells.Add(new Cell(0, 0));
             string h;
-            int maxLen = 7;
+            int maxLen = 6;
             this.maxValue = maxValue;
             for (int i = 0; i < headers.Length; i++)
             {
@@ -51,7 +51,7 @@ namespace Pleyads
                     }
                     else
                     {
-                        t.Value = values[i][j].ToString();
+                        t.Value = String.Format("{0:N2}", values[i][j]) ;
                         t.Number = values[i][j];
                         t.Color = DefaultColor;
                     }
